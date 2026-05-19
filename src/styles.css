@@ -417,6 +417,10 @@ h1 {
   stroke-linejoin: round;
 }
 
+.edge-spouse path {
+  stroke-width: 3;
+}
+
 .edge-uncertain path {
   stroke: var(--gold);
   stroke-dasharray: 6 6;

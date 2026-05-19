@@ -25,14 +25,18 @@ export function PersonNode({ data }: NodeProps<PersonNodeData>) {
 
   return (
     <div className={nodeClass}>
-      <Handle type="target" position={Position.Top} />
+      <Handle id="top-target" type="target" position={Position.Top} />
+      <Handle id="right-source" type="source" position={Position.Right} />
+      <Handle id="right-target" type="target" position={Position.Right} />
       {featured ? <span className={`portrait portrait-${data.person.id}`} aria-hidden="true" /> : null}
       <span className="node-label">
         <strong>{label}</strong>
         {featured && meta ? <span>{meta}</span> : null}
       </span>
       {!featured && data.person.ageAtDeath ? <small>{data.person.ageAtDeath}</small> : null}
-      <Handle type="source" position={Position.Bottom} />
+      <Handle id="left-source" type="source" position={Position.Left} />
+      <Handle id="left-target" type="target" position={Position.Left} />
+      <Handle id="bottom-source" type="source" position={Position.Bottom} />
     </div>
   );
 }

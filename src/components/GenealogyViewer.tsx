@@ -32,19 +32,29 @@ const compactPositions: Record<string, { x: number; y: number; sourcePosition?: 
   noah: { x: 198, y: 320, sourcePosition: 'bottom', targetPosition: 'right' },
 };
 
-function relationshipEdge(relationship: Relationship): Edge {
+function relationshipEdge(relationship: Relationship, viewMode: ViewMode): Edge {
   const uncertain = relationship.certainty !== 'explicit';
   const enochTurn = ['jared-enoch', 'enoch-methuselah'].includes(relationship.id);
+  const spouse = relationship.type === 'spouse';
+  const compact = viewMode === 'compact';
 
   return {
     id: relationship.id,
     source: relationship.sourcePersonId,
     target: relationship.targetPersonId,
-    type: relationship.type === 'spouse' ? 'straight' : 'step',
+    sourceHandle: compact ? (spouse ? 'right-source' : 'bottom-source') : undefined,
+    targetHandle: compact ? (spouse ? 'left-target' : 'top-target') : undefined,
+    type: spouse ? 'straight' : 'step',
     animated: uncertain,
-    className: [uncertain ? 'edge-uncertain' : 'edge-explicit', enochTurn ? 'edge-highlight' : ''].filter(Boolean).join(' '),
+    className: [
+      uncertain ? 'edge-uncertain' : 'edge-explicit',
+      spouse ? 'edge-spouse' : '',
+      enochTurn ? 'edge-highlight' : '',
+    ]
+      .filter(Boolean)
+      .join(' '),
     label: uncertain ? relationship.certainty : undefined,
-    style: { strokeWidth: relationship.type === 'spouse' ? 2.5 : 4 },
+    style: { strokeWidth: spouse ? 3 : 4 },
   };
 }
 
@@ -85,10 +95,19 @@ export function GenealogyViewer({
       }) as Node<PersonNodeData>[];
     }
 
-    return layoutNodes(baseNodes, visibleRelationships.map(relationshipEdge), 'LR') as Node<PersonNodeData>[];
+    return layoutNodes(baseNodes, visibleRelationships.map((relationship) => relationshipEdge(relationship, viewMode)), 'LR') as Node<PersonNodeData>[];
   }, [language, selectedPersonId, viewMode, visibleRelationships]);
 
-  const edges = useMemo(() => visibleRelationships.map(relationshipEdge), [visibleRelationships]);
+  const edges = useMemo(() => {
+    const familyTreeRelationships =
+      viewMode === 'compact'
+        ? visibleRelationships.filter((relationship) => !['eve-cain-maternal', 'eve-abel-maternal', 'eve-seth-maternal'].includes(relationship.id))
+        : visibleRelationships;
+
+    return [
+      ...familyTreeRelationships.map((relationship) => relationshipEdge(relationship, viewMode)),
+    ];
+  }, [viewMode, visibleRelationships]);
 
   const selectedPerson = people.find((person) => person.id === selectedPersonId) ?? people[0];
 
