@@ -11,13 +11,27 @@ export interface PersonNodeData {
 export function PersonNode({ data }: NodeProps<PersonNodeData>) {
   const label = data.person.displayName[data.language];
   const meta = data.person.labels[0]?.[data.language];
+  const featured = ['adam', 'eve', 'noah'].includes(data.person.id);
+  const compactLine = !featured && ['cain', 'abel', 'seth'].includes(data.person.id);
+  const nodeClass = [
+    'person-node',
+    featured ? 'person-node-featured' : 'person-node-lineage',
+    compactLine ? 'person-node-compact-line' : '',
+    data.person.gender === 'female' ? 'person-node-female' : '',
+    data.selected ? 'person-node-selected' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <div className={`person-node ${data.selected ? 'person-node-selected' : ''}`}>
+    <div className={nodeClass}>
       <Handle type="target" position={Position.Top} />
-      <strong>{label}</strong>
-      {meta ? <span>{meta}</span> : null}
-      {data.person.ageAtDeath ? <small>{data.person.ageAtDeath} yrs</small> : null}
+      {featured ? <span className={`portrait portrait-${data.person.id}`} aria-hidden="true" /> : null}
+      <span className="node-label">
+        <strong>{label}</strong>
+        {featured && meta ? <span>{meta}</span> : null}
+      </span>
+      {!featured && data.person.ageAtDeath ? <small>{data.person.ageAtDeath}</small> : null}
       <Handle type="source" position={Position.Bottom} />
     </div>
   );
