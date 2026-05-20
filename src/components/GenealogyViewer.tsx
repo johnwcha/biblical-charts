@@ -22,10 +22,10 @@ const compactPositions: Record<string, { x: number; y: number; sourcePosition?: 
   cain: { x: 140, y: 164, sourcePosition: 'bottom', targetPosition: 'top' },
   abel: { x: 260, y: 164, sourcePosition: 'bottom', targetPosition: 'top' },
   seth: { x: 380, y: 164, sourcePosition: 'right', targetPosition: 'top' },
-  enosh: { x: 520, y: 164, sourcePosition: 'right', targetPosition: 'left' },
-  kenan: { x: 670, y: 164, sourcePosition: 'right', targetPosition: 'left' },
-  mahalaleel: { x: 830, y: 164, sourcePosition: 'right', targetPosition: 'left' },
-  jared: { x: 958, y: 264, sourcePosition: 'bottom', targetPosition: 'top' },
+  enosh: { x: 575, y: 164, sourcePosition: 'right', targetPosition: 'left' },
+  kenan: { x: 740, y: 164, sourcePosition: 'right', targetPosition: 'left' },
+  mahalaleel: { x: 910, y: 164, sourcePosition: 'right', targetPosition: 'left' },
+  jared: { x: 1030, y: 264, sourcePosition: 'bottom', targetPosition: 'top' },
   enoch: { x: 795, y: 340, sourcePosition: 'left', targetPosition: 'right' },
   methuselah: { x: 610, y: 340, sourcePosition: 'left', targetPosition: 'right' },
   lamech: { x: 442, y: 340, sourcePosition: 'left', targetPosition: 'right' },
@@ -37,14 +37,18 @@ function relationshipEdge(relationship: Relationship, viewMode: ViewMode): Edge 
   const enochTurn = ['jared-enoch', 'enoch-methuselah'].includes(relationship.id);
   const spouse = relationship.type === 'spouse';
   const compact = viewMode === 'compact';
+  const sourcePosition = compactPositions[relationship.sourcePersonId];
+  const targetPosition = compactPositions[relationship.targetPersonId];
+  const sameRow = compact && sourcePosition && targetPosition && sourcePosition.y === targetPosition.y;
+  const forward = sameRow && sourcePosition.x < targetPosition.x;
 
   return {
     id: relationship.id,
     source: relationship.sourcePersonId,
     target: relationship.targetPersonId,
-    sourceHandle: compact ? (spouse ? 'right-source' : 'bottom-source') : undefined,
-    targetHandle: compact ? (spouse ? 'left-target' : 'top-target') : undefined,
-    type: spouse ? 'straight' : 'step',
+    sourceHandle: compact ? (spouse || sameRow ? (forward ? 'right-source' : 'left-source') : 'bottom-source') : undefined,
+    targetHandle: compact ? (spouse || sameRow ? (forward ? 'left-target' : 'right-target') : 'top-target') : undefined,
+    type: spouse || sameRow ? 'straight' : 'step',
     animated: uncertain,
     className: [
       uncertain ? 'edge-uncertain' : 'edge-explicit',
