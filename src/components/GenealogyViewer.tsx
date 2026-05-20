@@ -24,12 +24,12 @@ const compactPositions: Record<string, { x: number; y: number; sourcePosition?: 
   seth: { x: 380, y: 164, sourcePosition: 'right', targetPosition: 'top' },
   enosh: { x: 575, y: 164, sourcePosition: 'right', targetPosition: 'left' },
   kenan: { x: 740, y: 164, sourcePosition: 'right', targetPosition: 'left' },
-  mahalaleel: { x: 910, y: 164, sourcePosition: 'right', targetPosition: 'left' },
-  jared: { x: 1030, y: 264, sourcePosition: 'bottom', targetPosition: 'top' },
-  enoch: { x: 795, y: 340, sourcePosition: 'left', targetPosition: 'right' },
-  methuselah: { x: 610, y: 340, sourcePosition: 'left', targetPosition: 'right' },
-  lamech: { x: 442, y: 340, sourcePosition: 'left', targetPosition: 'right' },
-  noah: { x: 198, y: 320, sourcePosition: 'bottom', targetPosition: 'right' },
+  mahalaleel: { x: 910, y: 164, sourcePosition: 'bottom', targetPosition: 'left' },
+  jared: { x: 910, y: 284, sourcePosition: 'left', targetPosition: 'top' },
+  enoch: { x: 730, y: 284, sourcePosition: 'left', targetPosition: 'right' },
+  methuselah: { x: 545, y: 284, sourcePosition: 'left', targetPosition: 'right' },
+  lamech: { x: 370, y: 284, sourcePosition: 'left', targetPosition: 'right' },
+  noah: { x: 110, y: 284, sourcePosition: 'bottom', targetPosition: 'right' },
 };
 
 function relationshipEdge(relationship: Relationship, viewMode: ViewMode): Edge {
